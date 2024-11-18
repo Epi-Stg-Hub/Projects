@@ -1,20 +1,22 @@
-name: Create Repo
-on: 
+name: Create Repo on Issue
+
+on:
   issues:
     types: [opened]
 
 jobs:
-  create-repository:
+  create-repo:
     runs-on: ubuntu-latest
-    name: Creating Organization Repository
+
     steps:
-      - name: Use Node.js
-        uses: actions/setup-node@v2
-      - name: Creating GitHub Organization Repository
-        uses: repo-ctrl/create-repo-action@main 
-        id: create-repo
-        with:
-          repo-name: 'Test'
-          org-admin-token: '${{ secrets.ORG_ADMIN_TOKEN }}'
-      - name: Log URL to the repo
-        run: echo "The new repo is ${{ steps.create-repo.outputs.repo-url }}"
+    - name: Create a new repository
+      env:
+        GITHUB_TOKEN: ${{ secrets.ORG_ADMIN_TOKEN }}
+        ORG_NAME: 'Epi-Stg-Hub'
+        NEW_REPO_NAME: ${{ github.event.issue.title }}
+      run: |
+        curl -X POST \
+          -H "Authorization: token $GITHUB_TOKEN" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/orgs/$ORG_NAME/repos \
+          -d '{"name":"'"$NEW_REPO_NAME"'"}'
