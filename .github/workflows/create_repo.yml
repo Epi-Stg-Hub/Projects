@@ -15,6 +15,6 @@ jobs:
         ORG_NAME: 'Epi-Stg-Hub'
         NEW_REPO_NAME: ${{ github.event.issue.title }}
       run: |
-        gh repo create $ORG_NAME/$NEW_REPO_NAME --public
+        gh repo create "$ORG_NAME/$NEW_REPO_NAME" --public
         env:
             GH_TOKEN: ${{ secrets.ORG_ADMIN_TOKEN }}
