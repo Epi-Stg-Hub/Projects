@@ -9,13 +9,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Set up GitHub CLI
-      uses: actions/setup-gh@v2
-      with:
-        token: ${{ secrets.ORG_ADMIN_TOKEN }}
 
     - name: Create repo
       env:
@@ -23,3 +16,5 @@ jobs:
         NEW_REPO_NAME: ${{ github.event.issue.title }}
       run: |
         gh repo create $ORG_NAME/$NEW_REPO_NAME --public
+        env:
+            GH_TOKEN: ${{ secrets.ORG_ADMIN_TOKEN }}
