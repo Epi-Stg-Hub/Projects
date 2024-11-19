@@ -33,14 +33,18 @@ jobs:
     #     # create repo
     #     gh repo create $ORG_NAME/$REPO_NAME --internal -p $ORG_NAME/$TEMPLATE_NAME --include-all-branches
       
-  # update-repo:
-  #   if: ${{ github.event.label.name == 'Ongoing' }}
-  #   runs-on: ubuntu-latest
+  update-repo:
+     if: ${{ github.event.label.name == 'Ongoing' }}
+     runs-on: ubuntu-latest
 
-  #   steps:
-  #   - name: Update repo
-  #     needs: create-repo
-  #     env:
-  #       GH_TOKEN: ${{ secrets.ORG_ADMIN_TOKEN }}
-  #     run: |
-  #       gh repo edit -d ${{ github.event.issue.description }}
+     steps:
+     - name: Update repo
+       env:
+         ORG_NAME: 'Epi-Stg-Hub'
+         GH_TOKEN: ${{ secrets.ORG_ADMIN_TOKEN }}
+         NEW_REPO_NAME: ${{ github.event.issue.title }}
+         
+       run: |
+         # Sanitize the issue name
+         REPO_NAME=$(echo "$NEW_REPO_NAME" | tr ' ' '-')
+         gh repo edit $ORG_NAME/$REPO_NAME -d ${{ github.event.issue.description }}
