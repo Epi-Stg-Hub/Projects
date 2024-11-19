@@ -9,6 +9,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+    - name: List organization repositories
+      env:
+        GH_TOKEN: ${{ secrets.ORG_ADMIN_TOKEN }}
+      run: |
+        gh repo list <org-name> --json name,visibility --jq '.[] | "\(.name): \(.visibility)"'
+
     
     - name: Create repo
       env:
