@@ -19,7 +19,7 @@ jobs:
         # Sanitize the issue name
         REPO_NAME=$(echo "$NEW_REPO_NAME" | tr ' ' '-')
         # create repo
-        gh repo create $ORG_NAME/$REPO_NAME --internal
+        gh repo create $ORG_NAME/$REPO_NAME --private
 
     # - name: Create repo with template
     #   env:
