@@ -2,22 +2,45 @@ name: Create Repo on Issue
 
 on:
   issues:
-    types: [opened]
+    types: [labeled]
 
 jobs:
   create-repo:
+    if: ${{ github.event.label.name == 'Ongoing' }}
     runs-on: ubuntu-latest
 
     steps:
-    
     - name: Create repo
       env:
         ORG_NAME: 'Epi-Stg-Hub'
-        TEMPLATE_NAME: 'Template-Project'
         NEW_REPO_NAME: ${{ github.event.issue.title }}
         GH_TOKEN: ${{ secrets.ORG_ADMIN_TOKEN }}
       run: |
         # Sanitize the issue name
         REPO_NAME=$(echo "$NEW_REPO_NAME" | tr ' ' '-')
         # create repo
-        gh repo create $ORG_NAME/$REPO_NAME --internal -p $ORG_NAME/$TEMPLATE_NAME --include-all-branches
+        gh repo create $ORG_NAME/$REPO_NAME --internal
+
+    # - name: Create repo with template
+    #   env:
+    #     ORG_NAME: 'Epi-Stg-Hub'
+    #     TEMPLATE_NAME: 'Template-Project'
+    #     NEW_REPO_NAME: ${{ github.event.issue.title }}
+    #     GH_TOKEN: ${{ secrets.ORG_ADMIN_TOKEN }}
+    #   run: |
+    #     # Sanitize the issue name
+    #     REPO_NAME=$(echo "$NEW_REPO_NAME" | tr ' ' '-')
+    #     # create repo
+    #     gh repo create $ORG_NAME/$REPO_NAME --internal -p $ORG_NAME/$TEMPLATE_NAME --include-all-branches
+      
+  # update-repo:
+  #   if: ${{ github.event.label.name == 'Ongoing' }}
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #   - name: Update repo
+  #     needs: create-repo
+  #     env:
+  #       GH_TOKEN: ${{ secrets.ORG_ADMIN_TOKEN }}
+  #     run: |
+  #       gh repo edit -d ${{ github.event.issue.description }}

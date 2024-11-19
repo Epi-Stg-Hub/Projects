@@ -1,0 +1,19 @@
+name: Create Repo on Issue
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  create-repo:
+    runs-on: ubuntu-latest
+
+    steps:
+    
+    - name: Create repo
+      env:
+        ORG_NAME: 'Epi-Stg-Hub'
+        NEW_REPO_NAME: ${{ github.event.issue.title }}
+        GH_TOKEN: ${{ secrets.ORG_ADMIN_TOKEN }}
+      run: |
+        gh issue edit --add-label 'Waiting for approbation'
