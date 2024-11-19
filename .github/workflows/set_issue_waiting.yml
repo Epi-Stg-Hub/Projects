@@ -15,6 +15,6 @@ jobs:
         ORG_NAME: 'Epi-Stg-Hub'
         NEW_REPO_NAME: ${{ github.event.issue.title }}
         GH_TOKEN: ${{ secrets.ORG_ADMIN_TOKEN }}
-        ISSUE_NB: ${{ github.event.issue.id }}
+        ISSUE_NB: ${{ github.event.issue.number }}
       run: |
         gh issue edit $ISSUE_NB --add-label "Waiting for approbation"
