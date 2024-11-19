@@ -9,15 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
-    - name: Auth gh CLI
-      env:
-        GH_TOKEN: ${{ secrets.ORG_ADMIN_TOKEN }}
-      run: |
-        # Authenticate gh CLI
-        echo "$GH_TOKEN" | gh auth login --with-token
-        echo "gh CLI authenticated successfully."
-
+    
     - name: Create repo
       env:
         ORG_NAME: 'Epi-Stg-Hub'
