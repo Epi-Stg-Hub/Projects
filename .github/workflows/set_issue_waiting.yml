@@ -17,4 +17,4 @@ jobs:
         GH_TOKEN: ${{ secrets.ORG_ADMIN_TOKEN }}
         ISSUE_NB: ${{ github.event.issue.number }}
       run: |
-        gh issue edit $ISSUE_NB --add-label "Waiting for approbation""--repo "$ORG_NAME/Config"
+        gh issue edit $ISSUE_NB --add-label "Waiting for approbation" --repo "$ORG_NAME/Config"
