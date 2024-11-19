@@ -17,4 +17,4 @@ jobs:
         GH_TOKEN: ${{ secrets.ORG_ADMIN_TOKEN }}
       run: |
         REPO_NAME=$(echo "$NEW_REPO_NAME" | tr ' ' '-')
-        gh repo create $ORG_NAME/$NEW_REPO_NAME --public --default-branch main
+        gh repo create $ORG_NAME/$NEW_REPO_NAME --public
