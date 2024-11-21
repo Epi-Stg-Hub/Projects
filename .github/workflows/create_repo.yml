@@ -8,19 +8,33 @@ jobs:
   create-repo:
     if: ${{ github.event.label.name == 'Ongoing' }}
     runs-on: ubuntu-latest
-
-    steps:
-    - name: Create repo
-      env:
+    env:
         TEMPLATE_NAME: 'Template-Project'
         ORG_NAME: 'Epi-Stg-Hub'
+        REPO_NAME: 'Config'
+        ADMIN_NAME: '@Kaiwinta'
         NEW_REPO_NAME: ${{ github.event.issue.title }}
+        ISSUE_NB: ${{ github.event.issue.number }}
         GH_TOKEN: ${{ secrets.ORG_ADMIN_TOKEN }}
-      run: |
-        # Sanitize the issue name
-        REPO_NAME=$(echo "$NEW_REPO_NAME" | tr ' ' '-')
-        # create repo
-        gh repo create $ORG_NAME/$REPO_NAME --private -p $ORG_NAME/$TEMPLATE_NAME --include-all-branches
+      
+
+    steps:
+      - name: Create repo
+        id: createRepo
+        continue-on-error: true
+        run: |
+          # Sanitize the issue name
+          REPO_NAME=$(echo "$NEW_REPO_NAME" | tr ' ' '-')
+          # create repo
+          gh repo create $ORG_NAME/$REPO_NAME --private -p $ORG_NAME/$TEMPLATE_NAME --include-all-branches
+
+      - name: Comment on failure
+        id: commentOnFailure
+        if: steps.createRepo.outcome == 'failure'
+        run: |
+          gh issue $ISSUE_NB comment --repo "$ORG_NAME/$REPO_NAME" -b 'An error occured during the creation of the repo\n\nAdmin attention required $ADMIN_NAME'
+
+        
 
     # - name: Create repo with template
     #   env:
