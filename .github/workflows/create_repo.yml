@@ -16,6 +16,7 @@ jobs:
         NEW_REPO_NAME: ${{ github.event.issue.title }}
         ISSUE_NB: ${{ github.event.issue.number }}
         GH_TOKEN: ${{ secrets.ORG_ADMIN_TOKEN }}
+        ASSIGNEE: ${{ github.event.issue.assignees}}
       
 
     steps:
@@ -32,9 +33,9 @@ jobs:
         id: commentOnFailure
         if: steps.createRepo.outcome == 'failure'
         run: |
-          gh issue comment $ISSUE_NB  --repo "$ORG_NAME/$REPO_NAME" -b "An error occured during the creation of the repo\n\nAdmin attention required $ADMIN_NAME"
+          gh issue comment $ISSUE_NB  --repo "$ORG_NAME/$REPO_NAME" -b "An error occured during the creation of the repo\\n\\nAdmin attention required $ADMIN_NAME"
 
-        
+  
 
     # - name: Create repo with template
     #   env:
@@ -51,15 +52,27 @@ jobs:
   update-repo:
      if: ${{ github.event.label.name == 'Ongoing' }}
      runs-on: ubuntu-latest
+     env:
+       ORG_NAME: 'Epi-Stg-Hub'
+       GH_TOKEN: ${{ secrets.ORG_ADMIN_TOKEN }}
+       NEW_REPO_NAME: ${{ github.event.issue.title }}
+       ASSIGNEE: ${{ github.event.issue.assignees}}
 
      steps:
-     - name: Update repo
-       env:
-         ORG_NAME: 'Epi-Stg-Hub'
-         GH_TOKEN: ${{ secrets.ORG_ADMIN_TOKEN }}
-         NEW_REPO_NAME: ${{ github.event.issue.title }}
-         
+     - name: Create Team
        run: |
-         # Sanitize the issue name
-         REPO_NAME=$(echo "$NEW_REPO_NAME" | tr ' ' '-')
-         gh repo edit $ORG_NAME/$REPO_NAME -d ${{ github.event.issue.description }}
+        gh api \
+        --method POST \
+        -H "Accept: application/vnd.github+json" \
+        /orgs/my-org/teams \
+        -f name="$NEW_REPO_NAME-team" \
+        -f description="Team created for $NEW_REPO_NAME"
+  
+     - name: Assign People To team
+       run: |
+        for user in $ASSIGNEE; do
+        gh api \
+          --method PUT \
+          -H "Accept: application/vnd.github+json" \
+          /orgs/my-org/teams/$NEW_REPO_NAME-team/memberships/$user
+        done
