@@ -32,7 +32,7 @@ jobs:
         id: commentOnFailure
         if: steps.createRepo.outcome == 'failure'
         run: |
-          gh issue $ISSUE_NB comment --repo "$ORG_NAME/$REPO_NAME" -b 'An error occured during the creation of the repo\n\nAdmin attention required $ADMIN_NAME'
+          gh issue comment $ISSUE_NB  --repo "$ORG_NAME/$REPO_NAME" -b 'An error occured during the creation of the repo\n\nAdmin attention required $ADMIN_NAME'
 
         
 
