@@ -1,0 +1,6 @@
+.vs
+.dll
+bin/
+obj
+Debug
+.cache
