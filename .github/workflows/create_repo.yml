@@ -25,6 +25,7 @@ jobs:
         run: |
           # Sanitize the issue name
           REPO_NAME=$(echo "$NEW_REPO_NAME" | tr ' ' '-')
+          echo REPO_NAME
           # create repo
           gh repo create $ORG_NAME/$REPO_NAME --private -p $ORG_NAME/$TEMPLATE_NAME --include-all-branches
 
