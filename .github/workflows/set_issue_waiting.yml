@@ -8,6 +8,12 @@ jobs:
   label-waiting:
     runs-on: ubuntu-latest
     steps:
+      - name: Authenticate GH CLI
+        env:
+          GH_TOKEN: ${{ secrets.ORG_ADMIN_TOKEN }}
+        run: |
+          echo "$GH_TOKEN" | gh auth login --with-token
+
       - name: Add "Waiting for approbation" label
         env:
           GH_TOKEN: ${{ secrets.ORG_ADMIN_TOKEN }}
